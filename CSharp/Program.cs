@@ -1,26 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.VisualBasic.FileIO;
-
-//Task :
-//Add exception handling:
-//1- system format exception , Done!
-//2- string.IsNullOrEmpty(name) Done!
-
-/*Notes:
-    1- Add "no contact found" in DisplayContact() Method //Fixed
-    2- Fix bug in SearchContact() and RemoveContact() UpdateContact() Methods, the name is not found if its not in uppercase //Fixed
-    3- See what the fuck all this warnings is about...
-    4-There is a bug in UpdateContact() method when entering a new name its in lower case //Fixed
-
-*/
+﻿
+using System.Diagnostics;
 
 class Program
 {
-    static List<string> Names = new List<string>();
-    static List<int> Numbers = new List<int>();
-    static List<string> Emails=new List<string>();
+    //static List<string> Names = new List<string>();
+    //static List<int> Numbers = new List<int>();
+    //static List<string> Emails=new List<string>();
+
+    static List<Contact> Contacts = new List<Contact>();
 
     static string UserInput ="";
     static bool exit=false;
@@ -50,17 +37,17 @@ class Program
                         AddContact(); //Done!
                         break;
                     case 2:
-                        RemoveContact(); //Done!
+                        //RemoveContact(); //Done!
                         break;
                     case 3:
-                        SearchContact(); //Done!
+                        //SearchContact(); //Done!
                         break;
                     case 4:
-                        UpdateContact(); //Done!
+                        //UpdateContact(); //Done!
                         break;
                 
                     case 5:
-                        DisplayContacts(Names,Numbers,Emails); //Done!
+                        DisplayContacts(); //Done!
                         break;
                     case 6:
                         exit = true;
@@ -73,46 +60,47 @@ class Program
                         break;
                 }
             }
-            catch (System.FormatException ex)
+            catch (System.FormatException )
             {
-                Console.WriteLine("Error: you must enter a number.\nplease try again.");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine("Error: wrong input.\nplease try again.");
                 Console.ReadKey();
                 Console.Clear();
             }
-
-
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.ReadKey();
+                Console.Clear();
+            }
         }
-
     }
 
     static void ContactsInfo(string Name ,int Number,string Email) //method to store the contacts in lists..
     {
         //List<string> Names = new List<string>();
-        Names.Add(Name.ToUpper());
+        //Names.Add(Name.ToUpper());
 
         //List<int> Numbers = new List<int>();
-        Numbers.Add(Number);
+        //Numbers.Add(Number);
 
         //List<string> Emails=new List<string>();
-        Emails.Add(Email);
+        //Emails.Add(Email);
 
         //DisplayContacts(Names,Numbers,Emails);
 
     }
     static void AddContact() //done
     {
-        string name;
-        int number;
-        string email;
-
+        string inputName;
+        int inputNumber;
+        string inputEmail;
+        
         Console.WriteLine("Enter Name of the contact:");
-        name = Console.ReadLine()!;
+        inputName = Console.ReadLine()!;
 
-        if(string.IsNullOrEmpty(name))
+        if(string.IsNullOrEmpty(inputName))
         {
-            Console.WriteLine("The name must not be empty.");
+            Console.WriteLine("Name cannot be empty.");
             Console.WriteLine("please try again.");
             Console.ReadKey();
             Console.Clear();
@@ -120,12 +108,51 @@ class Program
         }
 
         Console.WriteLine("Enter number of the contact:");
-        number=int.Parse(Console.ReadLine()!);
+        inputNumber=int.Parse(Console.ReadLine()!);
+        if(inputNumber.ToString().Length == 0)
+        {
+            Console.WriteLine("Number cannot be empty.");
+            Console.WriteLine("please try again.");
+            Console.ReadKey();
+            Console.Clear();
+            AddContact();
+        }
 
         Console.WriteLine("Enter email address:");
-        email=Console.ReadLine()!;
+        inputEmail=Console.ReadLine()!;
+        if(string.IsNullOrEmpty(inputEmail))
+        {
+            Console.WriteLine("Email cannot be empty.");
+            Console.WriteLine("please try again.");
+            Console.ReadKey();
+            Console.Clear();
+            AddContact();
+        }
+        else
+        {
+            if (!inputEmail.Contains("@"))
+            {
+                Console.WriteLine("Invalid email: missing '@'");
+                Console.WriteLine("please try again.");
+                Console.ReadKey();
+                Console.Clear();
+                AddContact();
+            }
 
-        ContactsInfo(name,number,email);
+            else if (!inputEmail.Contains("."))
+            {
+                Console.WriteLine("Invalid email: missing '.'");
+                Console.WriteLine("please try again.");
+                Console.ReadKey();
+                Console.Clear();
+                AddContact();
+            }
+        }
+
+        Contact newContact = new Contact(inputName,inputNumber,inputEmail);
+        Contacts.Add(newContact);
+
+        //ContactsInfo(inputName,number,email);
 
         Console.WriteLine("The Contact has been added.\npress any key to continue.");
         Console.ReadKey();
@@ -133,7 +160,7 @@ class Program
         
     }
 
-    static void RemoveContact() //done
+    /*static void RemoveContact() //done
     {
         string UserInput;
 
@@ -197,20 +224,31 @@ class Program
         Console.ReadKey();
         Console.Clear();
     }
-
-    static void DisplayContacts(List<string>Names , List<int> Numbers,List<string> Emails) //done!
+*/
+    static void DisplayContacts( ) //done!
     {
-        if (Names.Count > 0)
+        if (Contacts.Count > 0)
         {
-            for (int i=0;i<Names.Count;i++)
+            /*
+            foreach (var contact in Contacts)
             {
-                Console.WriteLine("Contact No["+(i+1) +"]: " + Names[i]);
-                Console.WriteLine("Number of the contact: " + Numbers[i]);
-                Console.WriteLine("Email: " + Emails[i]);
+                Console.WriteLine($"Name: {contact.Name}");
+                Console.WriteLine($"Number: {contact.Number}");
+                Console.WriteLine($"Email: {contact.Email}");
+                Console.WriteLine();
+            }
+            */
+            
+            for (int i=0;i<Contacts.Count;i++)
+            {
+                Console.WriteLine("Contact No["+(i+1) +"]: " + Contacts[i].Name);
+                Console.WriteLine("Number of the contact: " + Contacts[i].Number);
+                Console.WriteLine("Email: " + Contacts[i].Email);
                 Console.WriteLine(" ");
             }
+            
         }
-        else if (Names.Count == 0 )
+        else if (Contacts.Count == 0 )
         {
             Console.WriteLine("No Contacts Found. ");
         }
@@ -219,6 +257,8 @@ class Program
         Console.ReadKey();
         Console.Clear();
     }
+
+    /*
     static void UpdateContact() //done!
     {
         bool found =false;
@@ -267,6 +307,6 @@ class Program
             }
         }
     }
-
+*/
 
 }

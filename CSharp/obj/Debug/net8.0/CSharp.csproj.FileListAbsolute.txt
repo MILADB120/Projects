@@ -12,3 +12,4 @@
 /home/milad/Projects/CSharp/obj/Debug/net8.0/CSharp.pdb
 /home/milad/Projects/CSharp/obj/Debug/net8.0/CSharp.genruntimeconfig.cache
 /home/milad/Projects/CSharp/obj/Debug/net8.0/ref/CSharp.dll
+/home/milad/Projects/CSharp/obj/Debug/net8.0/CSharp.sourcelink.json
