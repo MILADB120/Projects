@@ -22,7 +22,7 @@ class Program
     static List<int> Numbers = new List<int>();
     static List<string> Emails=new List<string>();
 
-    static string UserInput;
+    static string UserInput ="";
     static bool exit=false;
 
     static void Main(string[] args)
@@ -41,7 +41,7 @@ class Program
                 Console.WriteLine("4- Update a contact.");
                 Console.WriteLine("5- Display all Contacts.");
                 Console.WriteLine("6- Exit.");
-                int choice = int.Parse(Console.ReadLine());
+                int choice = int.Parse(Console.ReadLine()!);
                 Console.Clear();
                 
                 switch (choice)
@@ -108,7 +108,7 @@ class Program
         string email;
 
         Console.WriteLine("Enter Name of the contact:");
-        name = Console.ReadLine();
+        name = Console.ReadLine()!;
 
         if(string.IsNullOrEmpty(name))
         {
@@ -120,10 +120,10 @@ class Program
         }
 
         Console.WriteLine("Enter number of the contact:");
-        number=int.Parse(Console.ReadLine());
+        number=int.Parse(Console.ReadLine()!);
 
         Console.WriteLine("Enter email address:");
-        email=Console.ReadLine();
+        email=Console.ReadLine()!;
 
         ContactsInfo(name,number,email);
 
@@ -139,7 +139,7 @@ class Program
 
         //asking for user input...
         Console.WriteLine("Enter the contact name that you want to delete.");
-        UserInput=Console.ReadLine();
+        UserInput=Console.ReadLine()!;
 
         //checking the list for the contact..
         bool found = false;
@@ -172,7 +172,7 @@ class Program
         bool found = false;
 
         Console.WriteLine("Enter name of the contact:");
-        UserInput =Console.ReadLine();
+        UserInput =Console.ReadLine()!;
 
         for (int i=0 ; i < Names.Count ; i++)
         {
@@ -224,7 +224,7 @@ class Program
         bool found =false;
 
         Console.WriteLine("Enter the name of the contact that you want to modify:");
-        UserInput = Console.ReadLine();
+        UserInput = Console.ReadLine()!;
 
         for (int i=0 ; i < Names.Count ; i++)
         {
@@ -232,13 +232,13 @@ class Program
             {
                 Console.WriteLine("Contact found.\n");
                 Console.WriteLine("Enter new Name of the contact:");
-                Names[i] = Console.ReadLine().ToUpper();
+                Names[i] = Console.ReadLine()!.ToUpper();
 
                 Console.WriteLine("Enter new Number of the contact:");
-                Numbers[i]=int.Parse(Console.ReadLine());
+                Numbers[i]=int.Parse(Console.ReadLine()!);
 
                 Console.WriteLine("Enter new Email of the contact:");
-                Emails[i]=Console.ReadLine();
+                Emails[i]=Console.ReadLine()!;
 
                 Console.WriteLine("Contact Updated.");
                 Console.WriteLine("press any key to continue..");
@@ -253,7 +253,7 @@ class Program
         if (!found)
         {
             Console.WriteLine("No such Contact, please try again or press 6 to Exit program.");
-            string choice=Console.ReadLine();
+            string choice=Console.ReadLine()!;
 
             if(choice == "6" )
             {
