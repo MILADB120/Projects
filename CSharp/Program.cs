@@ -3,6 +3,19 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualBasic.FileIO;
 
+//Task :
+//Add exception handling:
+//1- system format exception , Done!
+//2- string.IsNullOrEmpty(name) Done!
+
+/*Notes:
+    1- Add "no contact found" in DisplayContact() Method //Fixed
+    2- Fix bug in SearchContact() and RemoveContact() UpdateContact() Methods, the name is not found if its not in uppercase //Fixed
+    3- See what the fuck all this warnings is about...
+    4-There is a bug in UpdateContact() method when entering a new name its in lower case //Fixed
+
+*/
+
 class Program
 {
     static List<string> Names = new List<string>();
@@ -18,47 +31,66 @@ class Program
         Console.WriteLine("Welcome to Contact Book!");
         Console.WriteLine("please select a number of your choice");
 
-        //bool exit = false;
         while (exit != true)
         {
-            Console.WriteLine("1- Add a contact.");
-            Console.WriteLine("2- Remove a contact.");
-            Console.WriteLine("3- Search a contact");
-            Console.WriteLine("4- Update a contact.");
-            Console.WriteLine("5- Display all Contacts.");
-            Console.WriteLine("6- Exit.");
-            int choice = int.Parse(Console.ReadLine());
-            Console.Clear();
-            switch (choice)
+            try
             {
-                case 1:
-                    AddContact(); //Done!
-                    break;
-                case 2:
-                    RemoveContact(); //Done!
-                    break;
-                case 3:
-                    SearchContact(); //Done!
-                    break;
-                case 4:
-                    UpdateContact(); //in progress...
-                    break;
+                Console.WriteLine("1- Add a contact.");
+                Console.WriteLine("2- Remove a contact.");
+                Console.WriteLine("3- Search a contact");
+                Console.WriteLine("4- Update a contact.");
+                Console.WriteLine("5- Display all Contacts.");
+                Console.WriteLine("6- Exit.");
+                int choice = int.Parse(Console.ReadLine());
+                Console.Clear();
                 
-                case 5:
-                    DisplayContacts(Names,Numbers,Emails); //Done!
-                    break;
-                case 6:
-                    exit = true;
-                    break;
+                switch (choice)
+                {
+                    case 1:
+                        AddContact(); //Done!
+                        break;
+                    case 2:
+                        RemoveContact(); //Done!
+                        break;
+                    case 3:
+                        SearchContact(); //Done!
+                        break;
+                    case 4:
+                        UpdateContact(); //Done!
+                        break;
+                
+                    case 5:
+                        DisplayContacts(Names,Numbers,Emails); //Done!
+                        break;
+                    case 6:
+                        exit = true;
+                        break;
+                        
+                    default:
+                        Console.WriteLine("Invalid choice. Please select 1-6.");
+                        Console.ReadKey();
+                        Console.Clear();
+                        break;
+                }
+            }
+            catch (System.FormatException ex)
+            {
+                Console.WriteLine("Error: you must enter a number.\nplease try again.");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                Console.ReadKey();
+                Console.Clear();
             }
 
+
         }
+
     }
 
-    static void ContactsInfo(string Name ,int Number,string Email)
+    static void ContactsInfo(string Name ,int Number,string Email) //method to store the contacts in lists..
     {
         //List<string> Names = new List<string>();
-        Names.Add(Name);
+        Names.Add(Name.ToUpper());
 
         //List<int> Numbers = new List<int>();
         Numbers.Add(Number);
@@ -71,17 +103,29 @@ class Program
     }
     static void AddContact() //done
     {
-        //string UserInput;
+        string name;
         int number;
         string email;
+
         Console.WriteLine("Enter Name of the contact:");
-        UserInput = Console.ReadLine();
+        name = Console.ReadLine();
+
+        if(string.IsNullOrEmpty(name))
+        {
+            Console.WriteLine("The name must not be empty.");
+            Console.WriteLine("please try again.");
+            Console.ReadKey();
+            Console.Clear();
+            AddContact();
+        }
+
         Console.WriteLine("Enter number of the contact:");
         number=int.Parse(Console.ReadLine());
+
         Console.WriteLine("Enter email address:");
         email=Console.ReadLine();
 
-        ContactsInfo(UserInput,number,email);
+        ContactsInfo(name,number,email);
 
         Console.WriteLine("The Contact has been added.\npress any key to continue.");
         Console.ReadKey();
@@ -101,7 +145,7 @@ class Program
         bool found = false;
         for (int i= Names.Count -1 ;i >= 0 ;i--)
         {
-            if (Names[i] == UserInput)
+            if (Names[i] == UserInput.ToUpper())
             {
                 Names.RemoveAt(i);
                 Numbers.RemoveAt(i);
@@ -132,7 +176,7 @@ class Program
 
         for (int i=0 ; i < Names.Count ; i++)
         {
-            if (Names[i] == UserInput)
+            if (Names[i] == UserInput.ToUpper())
             {
                 Console.WriteLine("The contact has been found.");
                 Console.WriteLine("Contact No["+(i+1) +"]: " + Names[i]);
@@ -156,19 +200,24 @@ class Program
 
     static void DisplayContacts(List<string>Names , List<int> Numbers,List<string> Emails) //done!
     {
-        for (int i=0;i<Names.Count;i++)
+        if (Names.Count > 0)
         {
-            Console.WriteLine("Contact No["+(i+1) +"]: " + Names[i]);
-            Console.WriteLine("Number of the contact: " + Numbers[i]);
-            Console.WriteLine("Email: " + Emails[i]);
-            Console.WriteLine(" ");
+            for (int i=0;i<Names.Count;i++)
+            {
+                Console.WriteLine("Contact No["+(i+1) +"]: " + Names[i]);
+                Console.WriteLine("Number of the contact: " + Numbers[i]);
+                Console.WriteLine("Email: " + Emails[i]);
+                Console.WriteLine(" ");
+            }
+        }
+        else if (Names.Count == 0 )
+        {
+            Console.WriteLine("No Contacts Found. ");
         }
 
         Console.WriteLine("press any key to continue...");
         Console.ReadKey();
         Console.Clear();
-
-
     }
     static void UpdateContact() //done!
     {
@@ -179,11 +228,11 @@ class Program
 
         for (int i=0 ; i < Names.Count ; i++)
         {
-            if (Names[i] == UserInput)
+            if (Names[i] == UserInput.ToUpper())
             {
                 Console.WriteLine("Contact found.\n");
                 Console.WriteLine("Enter new Name of the contact:");
-                Names[i] = Console.ReadLine();
+                Names[i] = Console.ReadLine().ToUpper();
 
                 Console.WriteLine("Enter new Number of the contact:");
                 Numbers[i]=int.Parse(Console.ReadLine());
